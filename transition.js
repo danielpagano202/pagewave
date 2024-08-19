@@ -31,7 +31,7 @@ let finalOptions = {
     loadEvent: "DOMContentLoaded",
 }
 
-export function SetUp(options = {}) {
+function SetUp(options = {}) {
     //Merge default options with user options
     finalOptions = { ...defaultOptions, ...options };
     //Import css files into HTNL document
@@ -44,8 +44,8 @@ export function SetUp(options = {}) {
         document.getElementsByTagName('HEAD')[0].appendChild(link);
     }
 }
-
-export const overlayType = Object.freeze({
+exports.SetUp = SetUp;
+const overlayType = Object.freeze({
     slide: Symbol("slide"),
     inverseSlide: Symbol("inverseSlide"),
     curtain: Symbol("curtain"),
@@ -53,10 +53,12 @@ export const overlayType = Object.freeze({
     fall: Symbol("fall"),
     bubble: Symbol("bubble"),
 });
-export const keyframeType = Object.freeze({
+exports.overlayType = overlayType;
+const keyframeType = Object.freeze({
     fade: Symbol("fade"),
     fadeaway: Symbol("fadeaway"),
 });
+exports.keyframeType = keyframeType;
 
 function ApplyAnimation(element, animationName, duration, timing, direction) {
     element.style.animation = `${animationName} ${duration}ms ${timing} both ${direction}`;
@@ -107,7 +109,7 @@ class KeyFramePreset {
         }
     }
 }
-
+exports.KeyFramePreset = KeyFramePreset;
 class KeyFrameCustom {
     constructor(animationName, duration, timing = "linear") {
         this.animationName = animationName;
@@ -119,7 +121,7 @@ class KeyFrameCustom {
         ApplyAnimation(mainElement, this.animationName, this.duration, this.timing, direction)
     }
 }
-
+exports.KeyFrameCustom = KeyFrameCustom;
 class StyleTransition {
     constructor(styleString, duration, startValue, endValue, timing = "linear") {
         this.styleString = styleString;
@@ -145,7 +147,7 @@ class StyleTransition {
         }
     }
 }
-
+exports.StyleTransition = StyleTransition;
 class MultiElementAnimation {
     constructor(animateableObjects, duration, timing = "linear", mainElementAnimation = "") {
         this.animateableObjects = animateableObjects;
@@ -164,7 +166,7 @@ class MultiElementAnimation {
         }
     }
 }
-
+exports.MultiElementAnimation = MultiElementAnimation;
 class OverlayPreset {
     constructor(oType, duration, color, timing = "linear") {
         this.duration = duration;
@@ -186,7 +188,7 @@ class OverlayPreset {
         }
     }
 }
-
+exports.OverlayPreset = OverlayPreset;
 class OverlayCustom {
     constructor(divAnimationObject, duration, color, timing = "linear", mainElementAnimation = "") {
         this.divAnimationObject = divAnimationObject;
@@ -219,7 +221,7 @@ class OverlayCustom {
         }
     }
 }
-
+exports.OverlayCustom = OverlayCustom;
 /*
 function AddFileToCache(file) {
     if ("serviceWorker" in navigator) {
@@ -258,15 +260,15 @@ function isNavigationFromSameSite() {
     return referrerHost === currentHost;
 }
 
-export function IsOverlay(transitionStyle) {
+function IsOverlay(transitionStyle) {
     if (transitionStyle instanceof OverlayPreset || transitionStyle instanceof OverlayCustom) {
         return true;
     } else if (transitionStyle instanceof StyleTransition || transitionStyle instanceof KeyFrameCustom || transitionStyle instanceof KeyFramePreset || transitionStyle instanceof MultiElementAnimation) {
         return false;
     }
 }
-
-export function WaitForElementLoad(selector, functionToExecute) {
+exports.IsOverlay = IsOverlay;
+function WaitForElementLoad(selector, functionToExecute) {
     if(document.querySelector(selector) != null){
         functionToExecute(document.querySelector(selector));
         return;
@@ -284,13 +286,13 @@ export function WaitForElementLoad(selector, functionToExecute) {
     // Start observing the document body for child additions
     observer.observe(document.body, { childList: true, subtree: true });
 }
-
-export function ListenForChange(aStyle, aOverlay = aStyle, aAnimation = aStyle, leaveFunction = (link) => {window.location = link;}) {
+exports.WaitForElementLoad = WaitForElementLoad;
+function ListenForChange(aStyle, aOverlay = aStyle, aAnimation = aStyle, leaveFunction = (link) => {window.location = link;}) {
     EndPoint(aStyle, aOverlay, aAnimation, leaveFunction);
     SendPoint(aStyle, aOverlay, aAnimation);
 }
-
-export function SendPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle, leaveFunction = (link) => {window.location = link;}) {
+exports.ListenForChange = ListenForChange;
+function SendPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle, leaveFunction = (link) => {window.location = link;}) {
     let allowAnimate = AddServiceWorker();
 
     function HandleClickAnimation(e) {
@@ -336,8 +338,8 @@ export function SendPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle, leaveF
         }, { once: true });
     }
 }
-
-export function EndPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle) {
+exports.SendPoint = SendPoint;
+function EndPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle) {
     if (aOverlay != aStyle || aAnimation != aStyle) {
         if (sessionStorage.getItem("animationType") === "true") {
             aStyle = aOverlay;
@@ -422,8 +424,8 @@ export function EndPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle) {
         }, { once: true });
     }
 }
-
-export function AnimatePageTransition(aStyle, direction = "normal") {
+exports.EndPoint = EndPoint;
+function AnimatePageTransition(aStyle, direction = "normal") {
     let mainElement = document.getElementById(finalOptions.mainContentIdName);
     if (!(aStyle instanceof OverlayPreset) && !(aStyle instanceof KeyFramePreset)) {
         sessionStorage.setItem("animationType", IsOverlay(aStyle).toString());
@@ -447,3 +449,4 @@ export function AnimatePageTransition(aStyle, direction = "normal") {
     }
 
 }
+exports.AnimatePageTransition = AnimatePageTransition;

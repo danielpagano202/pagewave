@@ -1,0 +1,22 @@
+{
+  "name": "pagewave",
+  "version": "1.0.0",
+  "description": "NPM Package for implementing page transitions in both SSR and CSR apps",
+  "main": "transition.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "page",
+    "transition",
+    "animation",
+    "ssr",
+    "csr"
+  ],
+  "author": "Daniel Pagano",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toasterstrudelz/pagewave.git"
+  }
+}
