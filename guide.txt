@@ -1,0 +1,56 @@
+Types of Animation Containers:
+-KeyFramePreset
+-KeyFrameCustom
+-StyleTransition
+-OverlayPreset
+-OverlayCustom
+-MultiElementAnimation
+
+Preset Types:
+-Overlay Presets
+-Keyframe Presets
+
+Animation Function:
+-AnimatePageTransition
+
+Listener Functions:
+-ListenForChange
+-SendPoint
+-EndPoint
+
+Hooks:
+-animateSF - animation start forward
+-animateSR - animation start reverse
+-animateEF - animation end forward
+-animateER - animation end reverse
+-animateSSP - start of send point listen
+-animateESP - end of send point listen
+-animateSEP - start of end point listen
+-animateEPNSW - end point no service worker exists
+-animateEEP - end of end point
+-animateEPNA - end point no animation played
+
+Features:
+-Built-in animations
+-Hooks
+-Doesn't touch history or use push state, allowing
+for you to use it with routers like sveltekit
+-Manual page transition animations can be run to avoid
+conflicts with any frameworks
+-Customizable ids for divs to avoid conflict with elements
+in your body
+-Allows for custom overlay animations, keyframe animations, or
+transition animations
+-Separate listener animations for different types of animations
+-Separate types of links for overlay or other animations
+
+What I Learned:
+-Expanded knowledge on HTML, JS, and CSS Knowledge
+-Session storage
+-Service workers
+-Polymorphism
+-Event dispatcher
+
+Common Issues:
+-White Flash
+-Issues with using absolute positioning on main content and calling overlay animations

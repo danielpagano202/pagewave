@@ -1,0 +1,20 @@
+@keyframes fade {
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+@keyframes fadeaway {
+    from{
+        position: absolute;
+        opacity: 1;
+        left: 0
+    }
+    to{
+        position: absolute;
+        opacity: 0;
+        left: -200px
+    }
+}

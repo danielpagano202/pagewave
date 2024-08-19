@@ -1,0 +1,121 @@
+:root{
+    --div-color: #293241;
+}
+@keyframes bubble {
+    from{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: var(--div-color);
+        clip-path: circle(0%);
+        top: 0;
+    }
+    to{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: var(--div-color);
+        clip-path: circle(100%);
+        top: 0;
+    }
+}
+@keyframes fall {
+    from{
+        height: 0%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        background-color: var(--div-color);
+    }
+    to{
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        background-color: var(--div-color);
+    }
+}
+@keyframes rise {
+    from{
+        height: 0%;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background-color: var(--div-color);
+    }
+    to{
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background-color: var(--div-color);
+    }
+}
+@keyframes leftcurtain{
+    from{
+        height: 100%;
+        width: 0%;
+        position: absolute;
+        top: 0;   
+        background-color: var(--div-color);   
+    }
+    to{
+        height: 100%;
+        width: 50%;
+        position: absolute;
+        top: 0;
+        background-color: var(--div-color);
+    }
+}
+@keyframes rightcurtain{
+    from{
+        height: 100%;
+        width: 0%;
+        position: absolute;
+        right: 0;
+        top: 0;   
+        background-color: var(--div-color);   
+    }
+    to{
+        height: 100%;
+        width: 50%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: var(--div-color);
+    }
+}
+@keyframes inverseSlide{
+    from{
+        height: 100%;
+        width: 0%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: var(--div-color);
+    }
+    to{
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: var(--div-color);
+    }
+}
+@keyframes slide {
+    from{
+        height: 100%;
+        width: 0%;
+        position: absolute;
+        top: 0;
+        background-color: var(--div-color);
+    }
+    to{
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        background-color: var(--div-color);
+    }
+}
