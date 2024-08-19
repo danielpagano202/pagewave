@@ -1,7 +1,7 @@
 {
   "name": "pagewave",
   "version": "1.0.0",
-  "description": "NPM Package for implementing page transitions in both SSR and CSR apps",
+  "description": "NPM Package for implementing page transitions in both SSR and CSR apps. Utilize both custom and preset animations. Choose between transitions, keyframe animations, and overlays.",
   "main": "transition.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,6 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/toasterstrudelz/pagewave.git"
+    "url": "https://github.com/danielpagano202/pagewave.git"
   }
 }
