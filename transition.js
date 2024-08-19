@@ -269,7 +269,7 @@ function AddServiceWorker() {
                 isServiceWorker = true;
             }
         }
-        navigator.serviceWorker.register("sw.js");
+        navigator.serviceWorker.register("./node_modules/pagewave/sw.js");
     }
     return isServiceWorker;
 }

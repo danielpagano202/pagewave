@@ -1,6 +1,6 @@
 {
   "name": "pagewave",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "NPM Package for implementing page transitions in both SSR and CSR apps. Utilize both custom and preset animations. Choose between transitions, keyframe animations, and overlays.",
   "main": "transition.js",
   "scripts": {
