@@ -1,3 +1,5 @@
+import * as kfp from "/node_modules/pagewave/KeyFramePreset.css";
+import * as op from "/node_modules/pagewave/OverlayPreset.css";
 //Default Options
 let defaultOptions = {
     mainContentIdName: "main-content",
@@ -53,7 +55,8 @@ function SetUp(options = {}) {
         }
     }
 }
-exports.SetUp = SetUp;
+const _SetUp = SetUp;
+export { _SetUp as SetUp };
 //Overlay Preset Types to Choose From
 const overlayType = Object.freeze({
     slide: Symbol("slide"),
@@ -63,13 +66,15 @@ const overlayType = Object.freeze({
     fall: Symbol("fall"),
     bubble: Symbol("bubble"),
 });
-exports.overlayType = overlayType;
+const _overlayType = overlayType;
+export { _overlayType as overlayType };
 //Keyframe Preset Types to Choose From
 const keyframeType = Object.freeze({
     fade: Symbol("fade"),
     fadeaway: Symbol("fadeaway"),
 });
-exports.keyframeType = keyframeType;
+const _keyframeType = keyframeType;
+export { _keyframeType as keyframeType };
 
 //Function to apply animation to element and keep its properties and remove the animation
 function ApplyAnimation(element, animationName, duration, timing, direction) {
@@ -123,7 +128,8 @@ class KeyFramePreset {
         }
     }
 }
-exports.KeyFramePreset = KeyFramePreset;
+const _KeyFramePreset = KeyFramePreset;
+export { _KeyFramePreset as KeyFramePreset };
 class KeyFrameCustom {
     constructor(animationName, duration, timing = "linear") {
         this.animationName = animationName;
@@ -136,7 +142,8 @@ class KeyFrameCustom {
         ApplyAnimation(mainElement, this.animationName, this.duration, this.timing, direction)
     }
 }
-exports.KeyFrameCustom = KeyFrameCustom;
+const _KeyFrameCustom = KeyFrameCustom;
+export { _KeyFrameCustom as KeyFrameCustom };
 class StyleTransition {
     constructor(styleString, duration, startValue, endValue, timing = "linear") {
         this.styleString = styleString;
@@ -164,7 +171,8 @@ class StyleTransition {
         }
     }
 }
-exports.StyleTransition = StyleTransition;
+const _StyleTransition = StyleTransition;
+export { _StyleTransition as StyleTransition };
 class MultiElementAnimation {
     constructor(animateableObjects, duration, timing = "linear", mainElementAnimation = "") {
         this.animateableObjects = animateableObjects;
@@ -185,7 +193,8 @@ class MultiElementAnimation {
         }
     }
 }
-exports.MultiElementAnimation = MultiElementAnimation;
+const _MultiElementAnimation = MultiElementAnimation;
+export { _MultiElementAnimation as MultiElementAnimation };
 class OverlayPreset {
     constructor(oType, duration, color, timing = "linear") {
         this.duration = duration;
@@ -208,7 +217,8 @@ class OverlayPreset {
         }
     }
 }
-exports.OverlayPreset = OverlayPreset;
+const _OverlayPreset = OverlayPreset;
+export { _OverlayPreset as OverlayPreset };
 class OverlayCustom {
     constructor(divAnimationObject, duration, color, timing = "linear", mainElementAnimation = "") {
         this.divAnimationObject = divAnimationObject;
@@ -246,7 +256,8 @@ class OverlayCustom {
         }
     }
 }
-exports.OverlayCustom = OverlayCustom;
+const _OverlayCustom = OverlayCustom;
+export { _OverlayCustom as OverlayCustom };
 /*
 function AddFileToCache(file) {
     if ("serviceWorker" in navigator) {
@@ -269,7 +280,7 @@ function AddServiceWorker() {
                 isServiceWorker = true;
             }
         }
-        navigator.serviceWorker.register("./node_modules/pagewave/sw.js");
+        navigator.serviceWorker.register("sw.js");
     }
     return isServiceWorker;
 }
@@ -292,7 +303,8 @@ function IsOverlay(transitionStyle) {
         return false;
     }
 }
-exports.IsOverlay = IsOverlay;
+const _IsOverlay = IsOverlay;
+export { _IsOverlay as IsOverlay };
 //Checks if element exists. If it does, it runs functionToExecute. Otherwise, waits until element exists to run the function
 function WaitForElementLoad(selector, functionToExecute) {
     if(document.querySelector(selector) != null){
@@ -312,13 +324,15 @@ function WaitForElementLoad(selector, functionToExecute) {
     // Start observing the document body for child additions
     observer.observe(document.body, { childList: true, subtree: true });
 }
-exports.WaitForElementLoad = WaitForElementLoad;
+const _WaitForElementLoad = WaitForElementLoad;
+export { _WaitForElementLoad as WaitForElementLoad };
 //Shorthand for SendPoint and EndPoint
 function ListenForChange(aStyle, aOverlay = aStyle, aAnimation = aStyle, leaveFunction = (link) => {window.location = link;}) {
     EndPoint(aStyle, aOverlay, aAnimation, leaveFunction);
     SendPoint(aStyle, aOverlay, aAnimation);
 }
-exports.ListenForChange = ListenForChange;
+const _ListenForChange = ListenForChange;
+export { _ListenForChange as ListenForChange };
 //Listens for clicks and plays animation and then redirects
 function SendPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle, leaveFunction = (link) => {window.location = link;}) {
     //True if service worker is active or ignored with useServiceWorker=false, false otherwise
@@ -373,7 +387,8 @@ function SendPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle, leaveFunction
         }, { once: true });
     }
 }
-exports.SendPoint = SendPoint;
+const _SendPoint = SendPoint;
+export { _SendPoint as SendPoint };
 //Waits for the document to load and plays the reverse animation
 function EndPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle) {
     //Checks to see what kind of receiving animation to play
@@ -466,7 +481,8 @@ function EndPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle) {
         }, { once: true });
     }
 }
-exports.EndPoint = EndPoint;
+const _EndPoint = EndPoint;
+export { _EndPoint as EndPoint };
 //Animates the page transition
 function AnimatePageTransition(aStyle, direction = "normal") {
     let mainElement = document.getElementById(finalOptions.mainContentIdName);
@@ -496,4 +512,5 @@ function AnimatePageTransition(aStyle, direction = "normal") {
     }
 
 }
-exports.AnimatePageTransition = AnimatePageTransition;
+const _AnimatePageTransition = AnimatePageTransition;
+export { _AnimatePageTransition as AnimatePageTransition };

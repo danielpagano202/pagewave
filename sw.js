@@ -1,8 +1,8 @@
 const CACHE_NAME = "Page Transition SW";
 let pageCache = [
-    "./node_modules/pagewave/transition.js",
-    "./node_modules/pagewave/OverlayPreset.css",
-    "./node_modules/pagewave/KeyFramePreset.css",
+    "transition.js",
+    "OverlayPreset.css",
+    "KeyFramePreset.css",
 ];
 self.addEventListener("fetch", (e) => {
     e.respondWith(
