@@ -18,9 +18,7 @@ npm install pagewave
 
 If gotten from NPM, service worker doesn't get added, so the optional parameter useServiceWorker needs to be false and pages should be cached for optimal transitions.
     
-## Getting Started
-
-### Features
+## Features
 
 - Built-in animations
 - Hooks
@@ -32,14 +30,14 @@ If gotten from NPM, service worker doesn't get added, so the optional parameter 
 - Separate types of links for overlay or other animations
 
 
-### High Level Explanation
+## High Level Explanation
 
 This package involves two types of animations: Overlay and Keyframe.
 - Overlay involve colored divs that move on the screen i.e. screen wipe
 - Keyframe involve animations of existing animations i.e. fading away
 
 These two animations can be created through certain classes
-```
+```javascript
 Style Transition 
 //Utilizes CSS transition to affect a certain value
 StyleTransition("opacity", 500, "1", "0")
@@ -80,7 +78,7 @@ MultiElementAnimation(
 
 These styles of transition can be used in link clicks, page loads, and manually very easily through functions calls.
 
-### To start it, run:
+## TGetting started
 
 ```javascript
     //Optional parameter can be ignored if not downloaded from npm
@@ -118,7 +116,7 @@ If you can't do that, change the parameter name.
 
 ```
 
-### Working with SSR
+## Working with SSR
 
 Many of these features work flawlessly with CSR. 
 
@@ -132,9 +130,9 @@ I tested this with Svelte as that is what I am familiar with.
 - loadEvent needs to be run independently. I would change it to "load" and call the event separately using dispatch event
 - SetUp may not automatically import the preset CSS files, so it may need to be done manually
 
-### Other Cool Features
+## Other Cool Features
 
-#### Custom Keyframe Transitions
+### Custom Keyframe Transitions
 
 This will create an animation style, that when called:
 
@@ -148,11 +146,7 @@ Essentially you can specify specific transitions for certain classes and a globa
 
 
 ```javascript
-
-
 SetUp();
-
-
 
 let anim = new MultiElementAnimation(
     {
@@ -201,12 +195,11 @@ ListenForChange(anim);
         opacity: 0;
     }
 }
-
 </style>
 
 ```
 
-#### Custom Overlay Transitions
+### Custom Overlay Transitions
 
 The same thing can be done with overlays
 
@@ -232,7 +225,7 @@ let aStyle = new OverlayCustom(
 
 You can do transitions manually through the ```AnimatePageTransition(style)``` function which takes an animation style as a parameter
 
-#### Different Transitions
+### Different Transitions
 
 You can have three different animations you can call in the ```SendPoint(), EndPoint(), or ListenForChange()``` function.
 
@@ -249,7 +242,7 @@ You can specify which animation is called by adding classes to link.
 - a-animation for keyframeAnimation
 
 
-#### Custom Link function
+### Custom Link function
 
 By default, this package uses a default function of ```window.location = link;``` for changing links. However, this can be customized in either ```SendPoint() or ListenForChange()```
 
@@ -266,7 +259,7 @@ SendPoint(defaultAnimation, overlayAnimation, keyframeAnimation, linkFunction);
 
 This is useful in SSR when the link change function is different from the default one.
 
-#### Events
+### Events
 
 There are many events that can be listened to to call certain code.
 
