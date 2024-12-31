@@ -91,7 +91,8 @@ Tag the element that encapsulates the content with an id of 'main-content'
 
 If you can't do that, change the parameter name.
 
-```javascript
+```html
+<script>
     //Optional parameter can be ignored if not downloaded from npm
     SetUp({useServiceWorker: false});
 
@@ -112,6 +113,12 @@ If you can't do that, change the parameter name.
     //Makes transition appear when arriving to this page
     EndPoint(aSty);
 
+</script>
+
+<div id="main-content">
+    <p>Content!</p>
+    ...
+</div>
     
 
 ```
@@ -145,56 +152,62 @@ This is over 1000ms, at a 'linear' pace, and fades everything
 Essentially you can specify specific transitions for certain classes and a global transition for everything
 
 
-```javascript
-SetUp();
+```html
+<script>
+    SetUp();
+    
+    let anim = new MultiElementAnimation(
+        {
+            "h1": "move",
+            "p": "move",
+            "h2": "inverseMove",
+            ".moving": "inverseMove",
+        }, 1000, "linear", "fadeAll"
+    );
+    
+    ListenForChange(anim);
+</script>
 
-let anim = new MultiElementAnimation(
-    {
-        "h1": "move",
-        "p": "move",
-        "h2": "inverseMove",
-        ".moving": "inverseMove",
-    }, 1000, "linear", "fadeAll"
-);
-
-ListenForChange(anim);
-
-...
+<div id="main-content">
+    <h1>Header</h1>
+    <p>Paragraph</p>
+    <h2>Second Header</h2>
+    <span class="moving"> Moving! </span>
+</div>
 
 <style>
-
-@keyframes move {
-    from{
-        transform: translate(0px, 0px);
-        color: black;
-        opacity: 1;
+    @keyframes move {
+        from{
+            transform: translate(0px, 0px);
+            color: black;
+            opacity: 1;
+        }
+        to{
+            transform: translate(-200px, 0px);
+            opacity: 0;
+            color: white;
+        }
+        
     }
-    to{
-        transform: translate(-200px, 0px);
-        opacity: 0;
-        color: white;
+    @keyframes inverseMove {
+        from{
+            transform: translate(0, 0px);
+            opacity: 1;
+        }
+        to{
+            transform: translate(200px, 0px);
+            opacity: 0;
+        }
+        
     }
-    
-}
-@keyframes inverseMove {
-    from{
-        transform: translate(0, 0px);
-        opacity: 1;
+    @keyframes fadeAll {
+        from{
+            opacity: 1;
+        }
+        to{
+            opacity: 0;
+        }
     }
-    to{
-        transform: translate(200px, 0px);
-        opacity: 0;
-    }
-    
-}
-@keyframes fadeAll {
-    from{
-        opacity: 1;
-    }
-    to{
-        opacity: 0;
-    }
-}
 </style>
 
 ```
