@@ -78,7 +78,7 @@ MultiElementAnimation(
 
 These styles of transition can be used in link clicks, page loads, and manually very easily through functions calls.
 
-## TGetting started
+## Getting started
 
 ```javascript
     //Optional parameter can be ignored if not downloaded from npm
