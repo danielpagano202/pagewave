@@ -1,5 +1,12 @@
-import * as kfp from "/node_modules/pagewave/KeyFramePreset.css";
-import * as op from "/node_modules/pagewave/OverlayPreset.css";
+//Default options are different from final options in Github version
+//Use a while loop to remove page blockers from past pages
+//Get rid of animation names on sendpoints
+//Hidden may be optimized away in certain compilers
+//Only animate elements in mainelement
+//Stop scrolling
+
+import * as kfp from "./KeyFramePreset.css";
+import * as op from "./OverlayPreset.css";
 //Default Options
 let defaultOptions = {
     mainContentIdName: "main-content",
@@ -18,6 +25,7 @@ let defaultOptions = {
     loadEvent: "DOMContentLoaded",
     usePresets: true,
     cleanUpDivs: false,
+    hideMainElementWithOpacity: false,
 }
 //Options object that will contain the actual options used by the program
 let finalOptions = {
@@ -37,10 +45,12 @@ let finalOptions = {
     loadEvent: "DOMContentLoaded",
     usePresets: true,
     cleanUpDivs: false,
+    hideMainElementWithOpacity: false,
 }
 
 //Sets Up Page Transition Capability. Not necessary if you don't need options or presets
 function SetUp(options = {}) {
+    console.log("SETUP")
     //Merge default options with user options
     finalOptions = { ...defaultOptions, ...options };
     //Import css files into HTML document automatically
@@ -440,10 +450,14 @@ function EndPoint(aStyle, aOverlay = aStyle, aAnimation = aStyle) {
             WaitForElementLoad(
                 "#" + finalOptions.mainContentIdName, () => {
                     document.getElementById(finalOptions.mainContentIdName).hidden = true;
+                    if(finalOptions.hideMainElementWithOpacity){
+                        document.getElementById(finalOptions.mainContentIdName).style.opacity = 0;
+                    }
                 }
             );
         } else {
             document.getElementById(finalOptions.mainContentIdName).hidden = true;
+            document.getElementById(finalOptions.mainContentIdName).style.opacity = 0;
         }
     }
     //Checks to see if allowAnimate=true and we aren't supposed to be ignoring the link
