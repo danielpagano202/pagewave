@@ -1,0 +1,1 @@
+export type OverlayType = "slide" | "inverseSlide" | "curtain" | "rise" | "fall" | "bubble" | "wipe";

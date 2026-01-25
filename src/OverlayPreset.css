@@ -6,7 +6,7 @@
         width: 100%;
         height: 100%;
         position: absolute;
-        background-color: var(--div-color);
+        
         clip-path: circle(0%);
         top: 0;
     }
@@ -14,7 +14,7 @@
         width: 100%;
         height: 100%;
         position: absolute;
-        background-color: var(--div-color);
+        
         clip-path: circle(100%);
         top: 0;
     }
@@ -25,14 +25,14 @@
         width: 100%;
         position: absolute;
         top: 0;
-        background-color: var(--div-color);
+        
     }
     to{
         height: 100%;
         width: 100%;
         position: absolute;
         top: 0;
-        background-color: var(--div-color);
+        
     }
 }
 @keyframes rise {
@@ -41,14 +41,14 @@
         width: 100%;
         position: absolute;
         bottom: 0;
-        background-color: var(--div-color);
+        
     }
     to{
         height: 100%;
         width: 100%;
         position: absolute;
         bottom: 0;
-        background-color: var(--div-color);
+        
     }
 }
 @keyframes leftcurtain{
@@ -57,14 +57,14 @@
         width: 0%;
         position: absolute;
         top: 0;   
-        background-color: var(--div-color);   
+           
     }
     to{
         height: 100%;
         width: 50%;
         position: absolute;
         top: 0;
-        background-color: var(--div-color);
+        
     }
 }
 @keyframes rightcurtain{
@@ -74,7 +74,7 @@
         position: absolute;
         right: 0;
         top: 0;   
-        background-color: var(--div-color);   
+           
     }
     to{
         height: 100%;
@@ -82,7 +82,7 @@
         position: absolute;
         right: 0;
         top: 0;
-        background-color: var(--div-color);
+        
     }
 }
 @keyframes inverseSlide{
@@ -92,7 +92,7 @@
         position: absolute;
         right: 0;
         top: 0;
-        background-color: var(--div-color);
+        
     }
     to{
         height: 100%;
@@ -100,7 +100,6 @@
         position: absolute;
         right: 0;
         top: 0;
-        background-color: var(--div-color);
     }
 }
 @keyframes slide {
@@ -109,13 +108,49 @@
         width: 0%;
         position: absolute;
         top: 0;
-        background-color: var(--div-color);
+        
     }
     to{
         height: 100%;
         width: 100%;
         position: absolute;
         top: 0;
-        background-color: var(--div-color);
+        
     }
+}
+
+@keyframes wipe {
+  /* Initial: left middle, thin vertical bar */
+  0% {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 1%;
+    height: 2%;
+    transform: translateY(-50%) scaleX(0) scaleY(1);
+    transform-origin: left center;
+    z-index: 9999;
+  }
+
+  /* Grow to the right */
+  50% {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2%;
+    transform: translateY(-50%);
+  }
+
+  /* Expand up & down */
+  100% {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-50%);
+    transform-origin: left center;
+    z-index: 9999;
+  }
 }

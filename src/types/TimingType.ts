@@ -1,0 +1,1 @@
+export type TimingType = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out" | "step-start" | "step-end";

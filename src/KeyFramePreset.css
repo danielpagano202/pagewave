@@ -1,0 +1,55 @@
+@keyframes fade {
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+@keyframes fadeaway {
+    from{
+        position: relative;
+        opacity: 1;
+        left: 0
+    }
+    to{
+        position: relative;
+        opacity: 0;
+        left: -200px
+    }
+}
+@keyframes fadetoleft {
+    from{
+        position: relative;
+        left: 0;
+        opacity: 1;
+    }
+    to{
+        position: relative;
+        left: -100px;
+        opacity: 0;
+    }
+}
+@keyframes fadetoright {
+    from{
+        position: relative;
+        left: 0;
+        opacity: 1;
+    }
+    to{
+        position: relative;
+        left: 100px;
+        opacity: 0;
+    }
+}
+@keyframes rotatefade {
+  0% {
+    transform: rotateZ(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(-180deg);
+    opacity: 0;
+  }
+}
+

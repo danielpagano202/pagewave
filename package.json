@@ -1,12 +1,29 @@
 {
   "name": "pagewave",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "NPM Package for implementing page transitions in both SSR and CSR apps. Utilize both custom and preset animations. Choose between transitions, keyframe animations, and overlays.",
-  "main": "transition.js",
-  "type": "module",
-  "style": ["KeyFramePreset.css", "OverlayPreset.css"],
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./OverlayPreset.css": {
+      "import": "./dist/OverlayPreset.css",
+      "require": "./dist/OverlayPreset.css"
+    },
+    "./KeyFramePreset.css": {
+      "import": "./dist/KeyFramePreset.css",
+      "require": "./dist/KeyFramePreset.css"
+    }
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup & copyfiles --up 1 \"src/*.css\" dist"
   },
   "keywords": [
     "page",
@@ -20,5 +37,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/danielpagano202/pagewave.git"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }
