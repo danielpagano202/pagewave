@@ -1,8 +1,6 @@
-
 # PageWave
 
 An NPM Package for implementing page transitions in both SSR and CSR apps
-
 
 ## Installation
 
@@ -12,7 +10,6 @@ Install pagewave with npm
 npm install pagewave
 ```
 
-    
 ## Features
 
 - Built-in animations
@@ -25,50 +22,44 @@ npm install pagewave
 - Highly customizable transition options
 - Extendable class system to create custom transition styles
 
-
 ## High Level Explanation
 
-This package involves allows a user to set up certain routes with names and have those routes triggered either by clicking on a link, loading onto a page, or manually. 
+This package involves allows a user to set up certain routes with names and have those routes triggered either by clicking on a link, loading onto a page, or manually.
 
 Utilize transtion classes premade or custom built to handle it.
 
 ## Getting started
 
-At its core, 
+At its core,
 
 ```typescript
-    import { PageWave, KeyFramePreset, StyleTransition, type KeyFrameType } from 'pagewave';
-    import "pagewave/KeyFramePreset.css";
+import { PageWave, KeyFramePreset, StyleTransition, type KeyFrameType } from "pagewave";
+import "pagewave/KeyFramePreset.css";
 
-    let keyFrameType: KeyFrameType = "fadetoright";
+let keyFrameType: KeyFrameType = "fadetoright";
 
-    let fadeToRightTransition = new KeyFrameCustom(
-        keyFrameType, 250, "ease-in-out"
-    );
+let fadeToRightTransition = new KeyFrameCustom(keyFrameType, 250, "ease-in-out");
 
-    let defaultTransition = new StyleTransition(
-        "opacity", 250, "1", "0"
-    );
+let defaultTransition = new StyleTransition("opacity", 250, "1", "0");
 
-    const pw: PageWave = new PageWave(
-        {
-            "fade": fadeToRightTransition
-        },
-    );
-    
-    // The following code should be contained within a client function like Sveltekit onMount or React useLayoutEffect if being done in SSR
+const pw: PageWave = new PageWave({
+    fade: fadeToRightTransition,
+});
 
-    // Setups the transition to occur when loading onto page, with a default transition provided
-    pw.EndPoint(defaultTransition);
+// The following code should be contained within a client function like Sveltekit onMount or React useLayoutEffect if being done in SSR
 
-    // Setups the transition to occur when a link is clicked, with a default transition provided
-	pw.SendPoint(defaultTransition);
+// Setups the transition to occur when loading onto page, with a default transition provided
+pw.EndPoint(defaultTransition);
 
-    // Called to start the endpoint
-	pw.CallEndPoint();
+// Setups the transition to occur when a link is clicked, with a default transition provided
+pw.SendPoint(defaultTransition);
+
+// Called to start the endpoint
+pw.CallEndPoint();
 ```
 
 In this code, there are a few points to note:
+
 - The arguments in PageWave represent routes that are used by EndPoint and SendPoint
 - For SendPoint, if a link has the class "fade", it will run the fade animation when clicked, and then go to the link. It will also save in sessionStorage the name "fade" under animationType
 - This session storage is used in EndPoint as it looks for a route matching the saved value under animationType. In this code, it would look for fade and play that transition.
@@ -104,13 +95,12 @@ If you can't do that, change the parameter name.
             mainContentIdName: "main-content"
         }
     );
-    
+
     // The following code should be contained within a client function like Sveltekit onMount or React useLayoutEffect if being done in SSR
-    
+
     // Combines Endpoint and Sendpoint if you need individual control
     pw.ListenForChange(defaultTransition);
     pw.CallEndPoint();
-
 </script>
 
 <!--The area that you want to transition must be marked with id="main-content"-->
@@ -119,15 +109,15 @@ If you can't do that, change the parameter name.
     <!-- This link transitions with the pagewave-bubble transition-->
     <a href="..." class="pagewave-bubble">Click me to transition!</a>
 </div>
-
 ```
 
 ## Working with SSR
 
 Because of the nature of SSR, a few changes have to be made:
+
 - The Send and End Points function must be run in load functions as they make reference to the window for changing the link and dispatching events
 - You need to change the goto Function for SendPoint. Do this by `SendPoint(defaultTransition, () => {/* Function */})`
-- Links may need to prevent default. The SendPoint function does this automatically, but it may need to be done manually
+- You may need to change the options `runAnimationOnCrossSite` or `runAnimationOnReload` in order for it to properly trigger the animations
 
 ## Other Cool Features
 
@@ -142,7 +132,6 @@ Moves h2 and elements with 'moving' class to the right
 This is over 1000ms, at a 'linear' pace, and fades everything
 
 Essentially you can specify specific transitions for certain classes and a global transition for everything
-
 
 ```javascript
 ...
@@ -173,7 +162,7 @@ pw.ListenForChange(multiElementAnimation);
         opacity: 0;
         color: white;
     }
-    
+
 }
 @keyframes inverseMove {
     from{
@@ -184,7 +173,7 @@ pw.ListenForChange(multiElementAnimation);
         transform: translate(200px, 0px);
         opacity: 0;
     }
-    
+
 }
 @keyframes fadeAll {
     from{
@@ -207,48 +196,57 @@ There are a few kinds of Custom Overlays
 OverlayCustom allows you to define which many different overlays and customize them. They will take the key as the class name (if you want to find it) and the value as the animation.
 
 After the object of divs, there is
+
 - duration
 - color of divs
 - timing
 - animation to play while Overlay Animation plays
 
 OverlayStyled is similar, except for two parts:
+
 - The object is now multi level, where the key is still the class name, but the value is object consisting of the animation name and the styles to be applied to the specific div.
 - After all the parameters, there is a new parameter that allows you to change the style of the blocker element. This is useful in cases like the example where since the div is a gradient, the blocker should look like that to be seamless
 
 ```javascript
 let customOverlay = new OverlayCustom(
     {
-        "first": "rise",
-        "second": "fall",
-        "third": "slide",
-        "fourth": "inverseSlide",
-    }, 3000, "#293241", "ease-in-out", null
+        first: "rise",
+        second: "fall",
+        third: "slide",
+        fourth: "inverseSlide",
+    },
+    3000,
+    "#293241",
+    "ease-in-out",
+    null,
 );
 
 let styledOverlay = new OverlayStyled(
     {
-        "first": {
+        first: {
             animationName: "rise",
             cssDesign: {
-                "background": "linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%)"
-            }
-        }, 
-    }, 3000, "#293241", "ease-in-out", null, {
-            "background": "linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%)"
-    }
-)
-
+                background: "linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%)",
+            },
+        },
+    },
+    3000,
+    "#293241",
+    "ease-in-out",
+    null,
+    {
+        background: "linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%)",
+    },
+);
 ```
 
 #### Manual Transitions
 
-You can do transitions manually through the ```AnimatePageTransition(style)``` method which takes a Transitionstyle as a parameter
-
+You can do transitions manually through the `AnimatePageTransition(style)` method which takes a Transitionstyle as a parameter
 
 ### Custom Link function
 
-By default, this package uses a default function of ```window.location = link;``` for changing links. However, this can be customized in either ```SendPoint() or ListenForChange()```
+By default, this package uses a default function of `window.location = link;` for changing links. However, this can be customized in either `SendPoint() or ListenForChange()`
 
 ```
 let defaultAnimation = ...
@@ -265,15 +263,15 @@ This is useful in SSR when the link change function is different from the defaul
 
 There are many events that can be listened to to call certain code.
 
-- animateSF - animation start, forward direction
-- animateSR - animation start, reverse direction
-- animateEF - animation end, forward direction
-- animateER - animation end, reverse direction
-- animateSSP - start of Send Point listening (when a link is clicked)
-- animateESP - end of Send Point listen (when the animation is handled)
-- animateSEP - start of end point listen (when the load event is dispatched)
-- animateEEP - end of end point (when the page is revealed after an animation)
-- animateEPNA - end point no animation played (when the page is revealed but no animation was played)
+- pagewaveStartForwardTransition - animation start, forward direction
+- pagewaveStartReverseTransition - animation start, reverse direction
+- pagewaveEndForwardTransition - animation end, forward direction
+- pagewaveEndReverseTransition - animation end, reverse direction
+- pagewaveStartSendPoint - start of Send Point listening (when a link is clicked)
+- pagewaveEndSendPoint - end of Send Point listen (when the animation is handled)
+- pagewaveStartEndPoint - start of end point listen (when the load event is dispatched)
+- pagewaveEndEndPoint- end of end point (when the page is revealed after an animation)
+- pagewaveEndPointNoTransition - end point no animation played (when the page is revealed but no animation was played)
 
 Listen by using window.addEventListener("...", (e) => {
 
@@ -324,7 +322,9 @@ preferIgnore: false
 ```
 
 ## Extending with Custom Transition classes
+
 PageWave provides many custom classes to create beautiful transitions:
+
 - **KeyFrameCustom** for a custom transition animation on main-content
 - **KeyFramePreset** to utilize premade animations for getting started quickly
 - **MultiElementAnimation** to animate multiple elements and have more fine grained control
@@ -336,6 +336,7 @@ PageWave provides many custom classes to create beautiful transitions:
 However, if you need to do something not listed here, the class system can be easily extended.
 
 To do so, you must implement the TransitionStyleInterface which requires a few parts to be defined:
+
 - duration: number (how long the animation lasts)
 - timing: TimingType (how the animation moves)
 - handle(direction: DirectionType, mainElement: HTMLElement) : void (runs the actual transition animation)

@@ -11,8 +11,8 @@ export class KeyFrameCustom extends KeyFrameBase {
         this.animationName = animationName;
     }
 
-    public handle(direction: DirectionType, mainElement: HTMLElement): void {
+    public async handle(direction: DirectionType, mainElement: HTMLElement): Promise<void> {
         mainElement.hidden = false;
-        this.ApplyAnimation(mainElement, this.animationName, this.duration, this.timing, direction);
+        await this.ApplyAnimation(mainElement, this.animationName, this.duration, this.timing, direction);
     }
 }

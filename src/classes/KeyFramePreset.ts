@@ -13,7 +13,7 @@ export class KeyFramePreset extends KeyFrameCustom {
         };
         super(animationMap[kfType], duration, timing);
     }
-    handle(direction: DirectionType, mainElement: HTMLElement): void {
-        super.handle(direction, mainElement);
+    async handle(direction: DirectionType, mainElement: HTMLElement): Promise<void> {
+        await super.handle(direction, mainElement);
     }
 }

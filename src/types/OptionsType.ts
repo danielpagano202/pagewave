@@ -11,4 +11,5 @@ export type OptionsType = {
     animateSelfLink: boolean;
     loadEvent: "DOMContentLoaded" | "load";
     preferIgnore: boolean;
-}
+    customIsLinkSamePageFunction: (link: string) => boolean;
+};

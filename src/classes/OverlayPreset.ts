@@ -17,7 +17,7 @@ export class OverlayPreset extends OverlayCustom{
         };
         super(overlayMap[oType], duration, color, timing);
     }
-    handle(direction: DirectionType, mainElement: HTMLElement): void {
-        super.handle(direction, mainElement);
+    async handle(direction: DirectionType, mainElement: HTMLElement): Promise<void> {
+        await super.handle(direction, mainElement);
     }
 }

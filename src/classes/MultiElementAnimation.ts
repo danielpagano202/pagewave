@@ -11,17 +11,19 @@ export class MultiElementAnimation extends KeyFrameBase {
         this.animateableObjects = animateableObjects;
         this.mainElementAnimation = mainElementAnimation;
     }
-    public handle(direction: DirectionType, mainElement: HTMLElement): void {
+
+    public async handle(direction: DirectionType, mainElement: HTMLElement): Promise<void> {
+        let animations: Promise<void>[] = [];
         let timing = this.timing;
         for (const [selector, animationName] of Object.entries(this.animateableObjects)) {
-            mainElement.querySelectorAll(selector).forEach(
-                (element) => {
-                    this.ApplyAnimation(element as HTMLElement, animationName, this.duration, timing, direction);
-                }
-            );
+            mainElement.querySelectorAll(selector).forEach((element) => {
+                animations.push(this.ApplyAnimation(element as HTMLElement, animationName, this.duration, timing, direction));
+            });
         }
         if (this.mainElementAnimation != "") {
-            this.ApplyAnimation(mainElement, this.mainElementAnimation, this.duration, timing, direction);
+            animations.push(this.ApplyAnimation(mainElement, this.mainElementAnimation, this.duration, timing, direction));
         }
+
+        await Promise.all(animations);
     }
 }
