@@ -18,6 +18,10 @@ export class OverlayBase implements TransitionStyle {
     public async handle(direction: DirectionType, mainElement: HTMLElement): Promise<void> {}
 
     public hidePage(options: OptionsType): void {
+        for (const ele of document.querySelectorAll(".pagewave-overlay-div")) {
+            ele.remove();
+        }
+
         const mainContent = document.getElementById(options.mainContentIdName)!;
         const pageBlockerElement = document.getElementById(options.pageBlockerId);
         if (pageBlockerElement) {
@@ -49,6 +53,16 @@ export class OverlayBase implements TransitionStyle {
                 element.style.cssText = "";
                 //element.remove();
             });
+        }
+    }
+
+    public cleanup(options: OptionsType): void {
+        for (const ele of document.querySelectorAll(".pagewave-overlay-div")) {
+            ele.remove();
+        }
+        const pageBlocker = document.getElementById(options.pageBlockerId);
+        if (pageBlocker) {
+            pageBlocker.remove();
         }
     }
 

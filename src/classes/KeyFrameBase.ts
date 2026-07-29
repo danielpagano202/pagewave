@@ -40,6 +40,13 @@ export class KeyFrameBase implements TransitionStyle {
         }
     }
 
+    public cleanup(options: OptionsType): void {
+        const mainContent = document.getElementById(options.mainContentIdName);
+        if (mainContent) {
+            mainContent.hidden = false;
+        }
+    }
+
     protected async waitForElementLoad(selector: string): Promise<HTMLElement> {
         const existingElement = document.querySelector(selector);
         if (existingElement != null) {

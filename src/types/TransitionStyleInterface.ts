@@ -11,4 +11,5 @@ export interface TransitionStyle {
 
     hidePage(options: OptionsType): void;
     revealPage(options: OptionsType): void;
+    cleanup(options: OptionsType): void;
 }

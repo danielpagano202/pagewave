@@ -12,6 +12,8 @@ export class PageWave {
     public finalOptions: OptionsType;
     public routeTransitions: Record<string, TransitionStyle>;
     public hookCallbacks: ((eventName: HookName, info: HookType) => void)[];
+    private sendPointFunction: (e: PointerEvent) => void;
+    private endPointFunction: (e: Event) => void;
     constructor(transitions: Record<string, TransitionStyle>, options: Partial<OptionsType> = {}) {
         this.defaultOptions = {
             mainContentIdName: "main-content",
@@ -31,6 +33,8 @@ export class PageWave {
         this.finalOptions = { ...this.defaultOptions, ...options };
         this.routeTransitions = transitions;
         this.hookCallbacks = [];
+        this.sendPointFunction = (e) => {};
+        this.endPointFunction = (e) => {};
     }
 
     // Helper functions
@@ -101,16 +105,25 @@ export class PageWave {
     private async HandleClickAnimation(e: MouseEvent, initialParameters: SendTransitionRequest) {
         let parameters = this.fillSendTransitionRequestWithDefaults(initialParameters);
 
-        e.preventDefault();
-        e.stopPropagation();
         const eventTarget: HTMLAnchorElement | null = (e.target as HTMLElement).closest("a");
 
-        if (!eventTarget || !eventTarget.href) {
+        if (!eventTarget || !eventTarget.href || eventTarget.classList.contains(this.finalOptions.classToIgnoreLink)) {
             return;
         }
 
+        // make named methods to avoid duplicates
+
+        e.preventDefault();
+        e.stopPropagation();
+
         const matchedRoute = Array.from(eventTarget.classList).find((cls: string) => cls in this.routeTransitions);
         const shouldIgnore = this.finalOptions.preferIgnore && !matchedRoute;
+
+        const transitionToUse = this.routeTransitions[matchedRoute ?? ""] ?? parameters.defaultTransitionStyle;
+        const transitionNameToSave = matchedRoute ?? parameters.defaultTransitionStyle.transitionName;
+        if (!parameters.shouldRunTransition(transitionToUse, eventTarget)) {
+            return;
+        }
 
         if (!shouldIgnore && (!this.finalOptions.customIsLinkSamePageFunction(eventTarget.href) || this.finalOptions.animateSelfLink)) {
             this.CallHook("pagewaveStartSendPoint", {
@@ -118,12 +131,6 @@ export class PageWave {
                 event: e,
                 pagewave: this,
             });
-
-            const transitionToUse = this.routeTransitions[matchedRoute ?? ""] ?? parameters.defaultTransitionStyle;
-            const transitionNameToSave = matchedRoute ?? parameters.defaultTransitionStyle.transitionName;
-            if (!parameters.shouldRunTransition(transitionToUse, eventTarget)) {
-                return;
-            }
 
             await this.SaveAnimationTypeAndTransition(transitionNameToSave, transitionToUse!);
         } else {
@@ -141,6 +148,7 @@ export class PageWave {
     }
 
     public SendPoint(parameters: SendTransitionRequest) {
+        /*
         let linkElements = Array.from(document.querySelectorAll("a"));
         linkElements = linkElements.filter((x) => !x.classList.contains(this.finalOptions.classToIgnoreLink));
         linkElements.forEach((el) => {
@@ -152,10 +160,50 @@ export class PageWave {
                 },
                 { once: true },
             );
-        });
+        });*/
+
+        const mainElement = document.getElementById(this.finalOptions.mainContentIdName);
+
+        if (!mainElement) {
+            console.error(`Element with ID '${this.finalOptions.mainContentIdName}' not found.`);
+            return;
+        }
+
+        mainElement.removeEventListener("click", this.sendPointFunction);
+        this.sendPointFunction = (e) => this.HandleClickAnimation(e, parameters);
+        mainElement.addEventListener("click", this.sendPointFunction);
     }
 
     // End point functions
+
+    private async handleEndPoint(e: Event, parameters: EndTransitionRequest) {
+        e.stopPropagation();
+        parameters.defaultTransitionStyle = this.getStorageRouteTransition(parameters.defaultTransitionStyle);
+        parameters.defaultTransitionStyle.hidePage(this.finalOptions);
+
+        this.CallHook("pagewaveStartEndPoint", { style: parameters.defaultTransitionStyle, pagewave: this });
+
+        let timeToWaitBeforeCleanUp: Promise<void> = new Promise((resolve) => resolve);
+
+        const doTransitionOnIgnoredLink = this.finalOptions.animateIgnoredLinks || sessionStorage.getItem("animationType") != "ignore";
+        const doAnimateOnReload = window.performance.getEntriesByType("navigation")[0]?.entryType != "reload" || this.finalOptions.runAnimationOnPageReload;
+        const doAnimateOnSameSite = this.isPreviousPageFromSameSite() || this.finalOptions.runAnimationOnCrossSite;
+
+        if (doAnimateOnReload && doAnimateOnSameSite && doTransitionOnIgnoredLink) {
+            await new Promise((resolve) => setTimeout(resolve, this.finalOptions.pageAnimationDelay));
+            timeToWaitBeforeCleanUp = this.AnimatePageTransition(parameters.defaultTransitionStyle, "reverse");
+
+            await new Promise((resolve) => setTimeout(resolve, this.finalOptions.pageRevealDelay));
+            this.CallHook("pagewaveEndEndPoint", { style: parameters.defaultTransitionStyle, pagewave: this });
+        } else {
+            this.CallHook("pagewaveEndPointNoTransition", { style: parameters.defaultTransitionStyle, pagewave: this });
+        }
+        parameters.defaultTransitionStyle.revealPage(this.finalOptions);
+        sessionStorage.setItem("animationType", "ignore");
+
+        await timeToWaitBeforeCleanUp;
+        parameters.defaultTransitionStyle.cleanup(this.finalOptions);
+    }
 
     public getStorageRouteTransition(defaultTransitionStyle: TransitionStyle): TransitionStyle {
         const storageKey = sessionStorage.getItem("animationType");
@@ -167,7 +215,10 @@ export class PageWave {
 
     public EndPoint(parameters: EndTransitionRequest) {
         parameters.defaultTransitionStyle = this.getStorageRouteTransition(parameters.defaultTransitionStyle);
-        parameters.defaultTransitionStyle.hidePage(this.finalOptions);
+
+        if (parameters.shouldHidePageOnCall) {
+            parameters.defaultTransitionStyle.hidePage(this.finalOptions);
+        }
 
         const mainElement = document.getElementById(this.finalOptions.mainContentIdName);
 
@@ -176,30 +227,9 @@ export class PageWave {
             return;
         }
 
-        mainElement.addEventListener(
-            this.finalOptions.loadEvent,
-            async (e) => {
-                e.stopPropagation();
-                this.CallHook("pagewaveStartEndPoint", { style: parameters.defaultTransitionStyle, pagewave: this });
-
-                const doTransitionOnIgnoredLink = this.finalOptions.animateIgnoredLinks || sessionStorage.getItem("animationType") != "ignore";
-                const doAnimateOnReload = window.performance.getEntriesByType("navigation")[0]?.entryType != "reload" || this.finalOptions.runAnimationOnPageReload;
-                const doAnimateOnSameSite = this.isPreviousPageFromSameSite() || this.finalOptions.runAnimationOnCrossSite;
-
-                if (doAnimateOnReload && doAnimateOnSameSite && doTransitionOnIgnoredLink) {
-                    await new Promise((resolve) => setTimeout(resolve, this.finalOptions.pageAnimationDelay));
-                    this.AnimatePageTransition(parameters.defaultTransitionStyle, "reverse");
-
-                    await new Promise((resolve) => setTimeout(resolve, this.finalOptions.pageRevealDelay));
-                    this.CallHook("pagewaveEndEndPoint", { style: parameters.defaultTransitionStyle, pagewave: this });
-                } else {
-                    this.CallHook("pagewaveEndPointNoTransition", { style: parameters.defaultTransitionStyle, pagewave: this });
-                }
-                parameters.defaultTransitionStyle.revealPage(this.finalOptions);
-                sessionStorage.setItem("animationType", "ignore");
-            },
-            { once: true },
-        );
+        mainElement.removeEventListener(this.finalOptions.loadEvent, this.endPointFunction);
+        this.endPointFunction = (e) => this.handleEndPoint(e, parameters);
+        mainElement.addEventListener(this.finalOptions.loadEvent, this.endPointFunction);
     }
 
     public CallEndPoint() {

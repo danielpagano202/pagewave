@@ -22,6 +22,10 @@ export class OverlayStyled extends OverlayBase {
     }
 
     public hidePage(options: OptionsType): void {
+        for (const ele of document.querySelectorAll(".pagewave-overlay-div")) {
+            ele.remove();
+        }
+
         const mainContent = document.getElementById(options.mainContentIdName)!;
         const pageBlockerElement = document.getElementById(options.pageBlockerId);
         if (pageBlockerElement) {
@@ -32,9 +36,6 @@ export class OverlayStyled extends OverlayBase {
             return;
         }
 
-        for (const ele of document.getElementsByClassName("pagewave-overlay-div")) {
-            ele.remove();
-        }
         const pageBlocker = document.createElement("div");
         pageBlocker.id = options.pageBlockerId;
         pageBlocker.style.cssText = `position: absolute; width: 100%; height: 100%; z-index: 100; top: 0; background-color: ${this.color}`;
@@ -45,7 +46,7 @@ export class OverlayStyled extends OverlayBase {
     }
 
     async handle(direction: DirectionType, mainElement: HTMLElement): Promise<void> {
-        for (const ele of document.getElementsByClassName("pagewave-overlay-div")) {
+        for (const ele of document.querySelectorAll(".pagewave-overlay-div")) {
             ele.remove();
         }
 

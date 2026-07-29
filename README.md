@@ -382,9 +382,10 @@ To do so, you must implement the TransitionStyleInterface which requires a few p
 
 - duration: number (how long the animation lasts)
 - timing: TimingType (how the animation moves)
-- handle(direction: DirectionType, mainElement: HTMLElement) : void (runs the actual transition animation)
+- handle(direction: DirectionType, mainElement: HTMLElement) : Promise<void> (runs the actual transition animation)
 - hidePage(options: OptionsType) : void (hides the page either before or after animation)
 - revealPage(options: OptionsType): void (reveals the page once animation needs to be shown)
+- cleanup(options: OptionsType): void (just a cleanup function to get rid of any miscellaneous junk after the animation finishes. This could possibly be an empty function depending on how you animate)
 
 PageWave does the rest of the work on using these functions to create seamless transitions.
 
