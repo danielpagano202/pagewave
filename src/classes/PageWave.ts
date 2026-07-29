@@ -12,8 +12,8 @@ export class PageWave {
     public finalOptions: OptionsType;
     public routeTransitions: Record<string, TransitionStyle>;
     public hookCallbacks: ((eventName: HookName, info: HookType) => void)[];
-    private sendPointFunction: (e: PointerEvent) => void;
-    private endPointFunction: (e: Event) => void;
+    private sendPointFunction: (e: PointerEvent) => Promise<void>;
+    private endPointFunction: (e: Event) => Promise<void>;
     constructor(transitions: Record<string, TransitionStyle>, options: Partial<OptionsType> = {}) {
         this.defaultOptions = {
             mainContentIdName: "main-content",
@@ -34,8 +34,8 @@ export class PageWave {
         this.finalOptions = { ...this.defaultOptions, ...options };
         this.routeTransitions = transitions;
         this.hookCallbacks = [];
-        this.sendPointFunction = (e) => {};
-        this.endPointFunction = (e) => {};
+        this.sendPointFunction = async (e) => {};
+        this.endPointFunction = async (e) => {};
     }
 
     // Helper functions
@@ -74,9 +74,11 @@ export class PageWave {
     private fillSendTransitionRequestWithDefaults(parameters: SendTransitionRequest): Required<SendTransitionRequest> {
         return {
             defaultTransitionStyle: parameters.defaultTransitionStyle,
-            shouldRunTransition: async () => {
-                return true;
-            },
+            shouldRunTransition:
+                parameters.shouldRunTransition ??
+                (async () => {
+                    return true;
+                }),
             leaveFunction:
                 parameters.leaveFunction ??
                 ((link) => {
@@ -120,7 +122,8 @@ export class PageWave {
 
         const transitionToUse = this.routeTransitions[matchedRoute ?? ""] ?? parameters.defaultTransitionStyle;
         const transitionNameToSave = matchedRoute ?? parameters.defaultTransitionStyle.transitionName;
-        if (!(await parameters.shouldRunTransition(transitionToUse, eventTarget))) {
+        const shouldRun = await parameters.shouldRunTransition(transitionToUse, eventTarget);
+        if (!shouldRun) {
             return;
         }
 
@@ -155,7 +158,7 @@ export class PageWave {
         }
 
         linkGroupElement.removeEventListener("click", this.sendPointFunction);
-        this.sendPointFunction = (e) => this.HandleClickAnimation(e, parameters);
+        this.sendPointFunction = async (e) => await this.HandleClickAnimation(e, parameters);
         linkGroupElement.addEventListener("click", this.sendPointFunction);
     }
 
@@ -209,7 +212,7 @@ export class PageWave {
         }
 
         mainElement.removeEventListener(this.finalOptions.loadEvent, this.endPointFunction);
-        this.endPointFunction = (e) => this.handleEndPoint(e, parameters);
+        this.endPointFunction = async (e) => await this.handleEndPoint(e, parameters);
         mainElement.addEventListener(this.finalOptions.loadEvent, this.endPointFunction);
     }
 
