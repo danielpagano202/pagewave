@@ -74,7 +74,7 @@ export class PageWave {
     private fillSendTransitionRequestWithDefaults(parameters: SendTransitionRequest): Required<SendTransitionRequest> {
         return {
             defaultTransitionStyle: parameters.defaultTransitionStyle,
-            shouldRunTransition: () => {
+            shouldRunTransition: async () => {
                 return true;
             },
             leaveFunction:
@@ -120,7 +120,7 @@ export class PageWave {
 
         const transitionToUse = this.routeTransitions[matchedRoute ?? ""] ?? parameters.defaultTransitionStyle;
         const transitionNameToSave = matchedRoute ?? parameters.defaultTransitionStyle.transitionName;
-        if (!parameters.shouldRunTransition(transitionToUse, eventTarget)) {
+        if (!(await parameters.shouldRunTransition(transitionToUse, eventTarget))) {
             return;
         }
 

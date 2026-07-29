@@ -300,7 +300,7 @@ SendPoint({
     defaultTransitionStyle: defaultAnimation,
     leaveFunction: internalLinkFunction,
     externalLeaveFunction: externalLinkFunction,
-    shouldRunTransition: () => shouldTransition
+    shouldRunTransition: async () => shouldTransition
 });
 ```
 
