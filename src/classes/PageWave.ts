@@ -29,7 +29,7 @@ export class PageWave {
             loadEvent: "DOMContentLoaded",
             preferIgnore: false,
             customIsLinkSamePageFunction: (link) => link == window.location.href,
-            classToLookForLinks: "main-content",
+            idToLookForLinks: "main-content",
         };
         this.finalOptions = { ...this.defaultOptions, ...options };
         this.routeTransitions = transitions;
@@ -147,10 +147,10 @@ export class PageWave {
     }
 
     public SendPoint(parameters: SendTransitionRequest) {
-        const linkGroupElement = document.getElementById(this.finalOptions.classToLookForLinks);
+        const linkGroupElement = document.getElementById(this.finalOptions.idToLookForLinks);
 
         if (!linkGroupElement) {
-            console.error(`Element with ID '${this.finalOptions.classToLookForLinks}' not found.`);
+            console.error(`Element with ID '${this.finalOptions.idToLookForLinks}' not found.`);
             return;
         }
 

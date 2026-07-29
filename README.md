@@ -369,7 +369,7 @@ customIsLinkSamePageFunction: (link) => link == window.location.href,
 
 // Changes where links that will activate the transition can be found. Defaults to inside where you transition
 // Useful to change if you have, for example, a nav drawer, but don't want that to transition
-classToLookForLinks: string = "main-content"
+idToLookForLinks: string = "main-content"
 ```
 
 ## Extending with Custom Transition classes
