@@ -33,7 +33,7 @@ Utilize transtion classes premade or custom built to handle it.
 At its core,
 
 ```typescript
-import { PageWave, KeyFramePreset, StyleTransition, type KeyFrameType } from "pagewave";
+import { PageWave, KeyFramePreset, StyleTransition, type KeyFrameType, KeyFrameCustom } from "pagewave";
 import "pagewave/KeyFramePreset.css";
 
 let keyFrameType: KeyFrameType = "fadetoright";
@@ -49,10 +49,14 @@ const pw: PageWave = new PageWave({
 // The following code should be contained within a client function like Sveltekit onMount or React useLayoutEffect if being done in SSR
 
 // Setups the transition to occur when loading onto page, with a default transition provided
-pw.EndPoint(defaultTransition);
+pw.EndPoint({
+    defaultTransitionStyle: defaultTransition,
+});
 
 // Setups the transition to occur when a link is clicked, with a default transition provided
-pw.SendPoint(defaultTransition);
+pw.SendPoint({
+    defaultTransitionStyle: defaultTransition,
+});
 
 // Called to start the endpoint
 pw.CallEndPoint();
@@ -98,8 +102,15 @@ If you can't do that, change the parameter name.
 
     // The following code should be contained within a client function like Sveltekit onMount or React useLayoutEffect if being done in SSR
 
-    // Combines Endpoint and Sendpoint if you need individual control
-    pw.ListenForChange(defaultTransition);
+    // Combines Endpoint and Sendpoint if you want both
+    pw.ListenForChange({
+        sendTransitionRequest: {
+            defaultTransitionStyle: defaultTransition
+        },
+        endTransitionRequest: {
+            defaultTransitionStyle: defaultTransition
+        }
+    });
     pw.CallEndPoint();
 </script>
 
@@ -136,7 +147,7 @@ Essentially you can specify specific transitions for certain classes and a globa
 ```javascript
 ...
 
-let multiElementAnimation =l new MultiElementAnimation(
+let multiElementAnimation = new MultiElementAnimation(
     {
         "h1": "move",
         "p": "move",
@@ -145,7 +156,14 @@ let multiElementAnimation =l new MultiElementAnimation(
     }, 1000, "linear", "fadeAll"
 );
 
-pw.ListenForChange(multiElementAnimation);
+pw.ListenForChange({
+    sendPointRequest: {
+        defaultTransitionStyle: multiElementAnimation
+    },
+    endPointRequest: {
+        defaultTransitionStyle: multiElementAnimation
+    }
+});
 
 ...
 
@@ -242,22 +260,45 @@ let styledOverlay = new OverlayStyled(
 
 #### Manual Transitions
 
-You can do transitions manually through the `AnimatePageTransition(style)` method which takes a Transitionstyle as a parameter
+You can do transitions manually through the `AnimatePageTransition(aStyle: TransitionStyle, direction: DirectionType = "normal")` method which takes a Transitionstyle as a parameter. You can ensure that the proper transitionName gets added for the EndPoint to receive by using `SaveAnimationTypeAndTransition(animationName: string, aStyle: TransitionStyle, direction: DirectionType = "normal")`
 
-### Custom Link function
+These methods can be awaited so you can properly time your next action.
 
-By default, this package uses a default function of `window.location = link;` for changing links. However, this can be customized in either `SendPoint() or ListenForChange()`
+### Send Point Bonuses
+
+#### Custom Internal Link Method
+
+By default, this package uses a default function of `window.location = link;` for changing links. However, this can be customized. This is useful in SSR when the link change function is different from the default one.
+
+#### Custom External Link Method
+
+Similar to before, you can change the function for leaving to external pages, with a basic default provided.
+
+#### Transition Verification Method
+
+You can supply a custom function to tell whether to transition or not
+
+#### All in All...
 
 ```
 let defaultAnimation = ...
-let linkFunction = (link) => {
-    console.log(link);
+let internalLinkFunction = (link) => {
+    console.log("I'm internal");
     window.location = link;
 }
-SendPoint(defaultAnimation, linkFunction);
-```
+let externalLinkFunction = (link) => {
+    console.log("I'm external");
+    window.location = link;
+}
+let shouldTransition = false;
 
-This is useful in SSR when the link change function is different from the default one.
+SendPoint({
+    defaultTransitionStyle: defaultAnimation,
+    leaveFunction: internalLinkFunction,
+    externalLeaveFunction: externalLinkFunction,
+    shouldRunTransition: () => shouldTransition
+});
+```
 
 ### Events
 
@@ -273,9 +314,7 @@ There are many events that can be listened to to call certain code.
 - pagewaveEndEndPoint- end of end point (when the page is revealed after an animation)
 - pagewaveEndPointNoTransition - end point no animation played (when the page is revealed but no animation was played)
 
-Listen by using window.addEventListener("...", (e) => {
-
-})
+Listen by using `window.addEventListener("...", (e) => {...})` or you can use the type safe `pagewave.CreateHookCallback(callback: (eventName: HookName, info: HookType) => void)`
 
 ### This program has optional parameters:
 
@@ -319,6 +358,10 @@ loadEvent: "DOMContentLoaded",
 // When true, it will ignore transitioning on a link if no animation is found in the class list
 // Otherwise, it will transition every time unless explicitly told to ignore
 preferIgnore: false
+
+// Custom Method to check if two links are the same.
+// Useful if you want pages like "/page" and "/page/123" to be the same
+customIsLinkSamePageFunction: (link) => link == window.location.href,
 ```
 
 ## Extending with Custom Transition classes
