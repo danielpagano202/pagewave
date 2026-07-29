@@ -3,7 +3,6 @@ import type { TimingType } from "../types/TimingType";
 import type { KeyFrameBase } from "./KeyFrameBase";
 import { OverlayBase } from "./OverlayBase";
 
-// ...existing code...
 export class OverlayCustom extends OverlayBase {
     divAnimationObject: Record<string, string>;
     mainElementAnimation: KeyFrameBase | null;

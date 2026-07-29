@@ -70,6 +70,10 @@ In this code, there are a few points to note:
 - Just because two pages may have "fade" defined doesn't mean that they have to play the same animation
 - CallEndPoint is utilized in cases where the base event "DOMContentLoaded" isn't called on every page (like in SSR where the layout stays constant)
 
+The way that the code will go is:
+
+Send Point and End Point set up their listeners -> CallEndPoint triggers the Endpoint to play entrance transition (this is the same as DOMContentLoaded getting called) -> ... -> A user clicks a link -> Plays the transition -> Navigate to next page
+
 ### Setting up an animation
 
 Tag the element that encapsulates the content with an id of 'main-content'
@@ -362,6 +366,10 @@ preferIgnore: false
 // Custom Method to check if two links are the same.
 // Useful if you want pages like "/page" and "/page/123" to be the same
 customIsLinkSamePageFunction: (link) => link == window.location.href,
+
+// Changes where links that will activate the transition can be found. Defaults to inside where you transition
+// Useful to change if you have, for example, a nav drawer, but don't want that to transition
+classToLookForLinks: string = "main-content"
 ```
 
 ## Extending with Custom Transition classes

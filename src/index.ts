@@ -17,3 +17,8 @@ export * from "./types/OptionsType";
 export * from "./types/OverlayType";
 export * from "./types/TimingType";
 export * from "./types/TransitionStyleInterface";
+export * from "./types/HookName";
+export * from "./types/HookType";
+export * from "./types/SendTransitionRequest";
+export * from "./types/EndTransitionRequest";
+export * from "./types/ListenForChangeRequest";

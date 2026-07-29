@@ -29,6 +29,7 @@ export class PageWave {
             loadEvent: "DOMContentLoaded",
             preferIgnore: false,
             customIsLinkSamePageFunction: (link) => link == window.location.href,
+            classToLookForLinks: "main-content",
         };
         this.finalOptions = { ...this.defaultOptions, ...options };
         this.routeTransitions = transitions;
@@ -111,8 +112,6 @@ export class PageWave {
             return;
         }
 
-        // make named methods to avoid duplicates
-
         e.preventDefault();
         e.stopPropagation();
 
@@ -148,30 +147,16 @@ export class PageWave {
     }
 
     public SendPoint(parameters: SendTransitionRequest) {
-        /*
-        let linkElements = Array.from(document.querySelectorAll("a"));
-        linkElements = linkElements.filter((x) => !x.classList.contains(this.finalOptions.classToIgnoreLink));
-        linkElements.forEach((el) => {
-            el.onclick = null;
-            el.addEventListener(
-                "click",
-                (e) => {
-                    this.HandleClickAnimation(e, parameters);
-                },
-                { once: true },
-            );
-        });*/
+        const linkGroupElement = document.getElementById(this.finalOptions.classToLookForLinks);
 
-        const mainElement = document.getElementById(this.finalOptions.mainContentIdName);
-
-        if (!mainElement) {
-            console.error(`Element with ID '${this.finalOptions.mainContentIdName}' not found.`);
+        if (!linkGroupElement) {
+            console.error(`Element with ID '${this.finalOptions.classToLookForLinks}' not found.`);
             return;
         }
 
-        mainElement.removeEventListener("click", this.sendPointFunction);
+        linkGroupElement.removeEventListener("click", this.sendPointFunction);
         this.sendPointFunction = (e) => this.HandleClickAnimation(e, parameters);
-        mainElement.addEventListener("click", this.sendPointFunction);
+        linkGroupElement.addEventListener("click", this.sendPointFunction);
     }
 
     // End point functions
@@ -215,10 +200,6 @@ export class PageWave {
 
     public EndPoint(parameters: EndTransitionRequest) {
         parameters.defaultTransitionStyle = this.getStorageRouteTransition(parameters.defaultTransitionStyle);
-
-        if (parameters.shouldHidePageOnCall) {
-            parameters.defaultTransitionStyle.hidePage(this.finalOptions);
-        }
 
         const mainElement = document.getElementById(this.finalOptions.mainContentIdName);
 
