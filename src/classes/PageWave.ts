@@ -142,7 +142,7 @@ export class PageWave {
 
     public SendPoint(parameters: SendTransitionRequest) {
         let linkElements = Array.from(document.querySelectorAll("a"));
-        linkElements.filter((x) => !x.classList.contains(this.finalOptions.classToIgnoreLink));
+        linkElements = linkElements.filter((x) => !x.classList.contains(this.finalOptions.classToIgnoreLink));
         linkElements.forEach((el) => {
             el.onclick = null;
             el.addEventListener(
